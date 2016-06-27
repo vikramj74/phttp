@@ -2,15 +2,15 @@ PHTTP
 -------
 A simple curl wrapper, which provides a clean object oriented interface to manage HTTP requests. All Phttp requests return a PhttpResponse object, which makes available the following response data :
 - HTTP status code : 
-  ```php 
+  ``` 
   $statusCode = $resp->getStatusCode();
   ```
-- Response body
-  ```php 
+- Response body : 
+  ``` 
   $responseBody = $resp->getBody();
   ```
-- Response headers
-  ```php 
+- Response headers : 
+  ``` 
   $responseHeaders = $resp->getHeaders();
   ```
 
