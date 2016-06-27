@@ -49,11 +49,13 @@ Phttp::get($url, $queryParameters, $headers);
 ```php 
 Ex : 
 $r = Phttp::get(
-    "www.google.com/search", 
+    "api.project.com/vehicles", 
     array(
-        "q" => "Github"
+        "min_top_speed" => "250"
     ), 
-    null
+    array(
+        "Auth-Token" => "abcdef123#!"
+    )
 );
 ``` 
 
@@ -70,12 +72,14 @@ Phttp::post($url, $requestBody, $headers);
 ```php 
 Ex : 
 $r = Phttp::post(
-    "www.google.com/search", 
+    "api.project.com/vehicles", 
     http_build_query(array(
-        "a" => 21,
-        "b" => 31
+        "name" => "Lamborghini Gallardo",
+        "top_speed" => 300
     )),
-    null
+    array(
+        "Auth-Token" => "abcdef123#!"
+    )
 );
 ```
 
@@ -93,12 +97,14 @@ Phttp::postJson($url, $jsonArr, $headers);
 ```php 
 Ex : 
 $r = Phttp::postJson(
-    "www.google.com", 
+    "api.project.com/users/", 
     array( 
-        "a" => 21, 
-        "b" => 31 
+        "name" => "Jane Doe", 
+        "age" => 21 
     ), 
-    null
+    array(
+        "Auth-Token" => "abcdef123#!"
+    )
 );
 ```
   
