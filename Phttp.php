@@ -176,7 +176,13 @@ class Phttp {
         if($jsonArr !== null) {
             $jsonPayLoad = json_encode($jsonArr);   
         }
+        
+        if($headers === null) {
+            $headers = array();
+        }
          
+        $headers["Content-Type"] = "application/json";
+
         return Phttp::post($url, $jsonPayLoad, $headers);
     }  
 
