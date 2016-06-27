@@ -1,4 +1,4 @@
-# PHTTP
+PHTTP
 -------
 A simple curl wrapper, which provides a clean object oriented interface to manage HTTP requests. All Phttp requests return a PhttpResponse object, which makes available the following response data :
 - HTTP status code : 
@@ -34,9 +34,9 @@ if($resp->getErrorMessage() === null) {
   echo "\nError : ".$resp->getErrorMessage();
 }
 ```
-# Available methods
+Available methods
 -------------------
-# #GET 
+# GET 
 ```php
 Phttp::get($url, $queryParameters, $headers);
 ```
@@ -88,11 +88,11 @@ Phttp::postJson($url, $jsonArr, $headers);
   );
   ```
   
-# License
+License
 ---------
 The MIT license
 
-# Author
+Author
 --------
 Vikram Jaswal :   [@vikramj74](https://github.com/vikramj74 "@vikramj74")
 
