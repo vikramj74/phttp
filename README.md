@@ -36,7 +36,7 @@ if($resp->getErrorMessage() === null) {
 ```
 Available methods
 -------------------
-# GET 
+## GET 
 ```php
 Phttp::get($url, $queryParameters, $headers);
 ```
@@ -48,6 +48,7 @@ Phttp::get($url, $queryParameters, $headers);
   Ex : 
   $r = Phttp::get("www.google.com/search", array("q" => "Github"), null);
   ``` 
+
 ## POST
 ```php
 Phttp::post($url, $requestBody, $headers);
