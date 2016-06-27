@@ -44,10 +44,18 @@ Phttp::get($url, $queryParameters, $headers);
 - URL (string) : The URL at which a GET request should be issued.
 - Query Parameters (array) : An array of query parameters. 
 - Request headers (array) : An array of headers to be added to the request.
- ```php 
-  Ex : 
-  $r = Phttp::get("www.google.com/search", array("q" => "Github"), null);
-  ``` 
+
+### Example :
+```php 
+Ex : 
+$r = Phttp::get(
+    "www.google.com/search", 
+    array(
+        "q" => "Github"
+    ), 
+    null
+);
+``` 
 
 ## POST
 ```php
@@ -57,17 +65,19 @@ Phttp::post($url, $requestBody, $headers);
 - URL (string) : The URL at which a POST request should be issued.
 - Request body (string) : The body of the request as a string. 
 - Request headers (array) : An array of headers to be added to the request.
- ```php 
-  Ex : 
-  $r = Phttp::post(
+
+### Example : 
+```php 
+Ex : 
+$r = Phttp::post(
     "www.google.com/search", 
     http_build_query(array(
-     "a" => 21,
-     "b" => 31
+        "a" => 21,
+        "b" => 31
     )),
     null
-  );
-  ```
+);
+```
 
 ## POST JSON
 A helper method to post as JSON an array of values. The 'Content-Type: application/json' header automatically gets added to the request.
@@ -78,17 +88,19 @@ Phttp::postJson($url, $jsonArr, $headers);
 - URL (string) : The URL at which a POST request should be issued.
 - Request body (string) : The body of the request as a string. 
 - Request headers (array) : An array of headers to be added to the request.
- ```php 
-  Ex : 
-  $r = Phttp::postJson(
+
+### Example :
+```php 
+Ex : 
+$r = Phttp::postJson(
     "www.google.com", 
     array( 
         "a" => 21, 
         "b" => 31 
     ), 
     null
-  );
-  ```
+);
+```
   
 License
 ---------
