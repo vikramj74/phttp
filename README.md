@@ -68,6 +68,7 @@ Phttp::post($url, $requestBody, $headers);
     null
   );
   ```
+
 ## POST JSON
 A helper method to post as JSON an array of values. The 'Content-Type: application/json' header automatically gets added to the request.
 ```php
