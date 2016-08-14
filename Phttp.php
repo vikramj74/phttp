@@ -83,7 +83,6 @@ class Phttp {
         foreach($headers as $k => $v) {
             $processedHeaders[] = $k.": ".$v;
         }
-        echo "\nCustom request headers : ".json_encode($processedHeaders);
         curl_setopt($client, CURLOPT_HTTPHEADER, $processedHeaders);
     }
 
@@ -121,7 +120,6 @@ class Phttp {
         }
 
 
-        echo "Phttp : GETing  URL : ".$url;
 
         $resp = Phttp::getResponse($client);
         curl_close($client);
@@ -158,7 +156,6 @@ class Phttp {
             Phttp::attachRequestHeaders($client, $headers);
         }   
      
-        echo "\n\nPOSTing : \n".$requestBody."\nTo : ".$url;       
         
         $resp = Phttp::getResponse($client);
         curl_close($client);
