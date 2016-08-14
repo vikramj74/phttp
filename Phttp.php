@@ -43,6 +43,16 @@ class PhttpResponse {
 
 class Phttp {
 
+    
+    const GET_REQUEST = "GET",
+          POST_REQUEST = "POST",
+          PUT_REQUEST = "PUT",
+          DELETE_REQUEST = "DELETE",
+          OPTIONS_REQUEST = "OPTIONS",
+          HEAD_REQUEST = "HEAD";
+          
+
+
     private static function parseResponseHeaders($headerString) {
         $headers = explode("\r\n", $headerString);
         $parsedHeaders = array();
@@ -54,12 +64,7 @@ class Phttp {
                 $parsedHeaders[$name] = $value;
             }
         }
-        /**
-        foreach($parsedHeaders as $k => $v) {
-            $parsedHeaders[$k] = explode('; ', $v);
-        }
-        */
-
+        
         return $parsedHeaders;
     }
 
@@ -78,7 +83,7 @@ class Phttp {
         return $resp; 
     }
 
-    public static function attachRequestHeaders($client, $headers) {
+    private static function attachRequestHeaders($client, $headers) {
         $processedHeaders = array();
         foreach($headers as $k => $v) {
             $processedHeaders[] = $k.": ".$v;
@@ -86,6 +91,46 @@ class Phttp {
         curl_setopt($client, CURLOPT_HTTPHEADER, $processedHeaders);
     }
 
+    private static function makeRequest($requestMethod, $url, $requestBody = null, $headers = null) {
+
+        if($headers === null) {
+            $headers = array();
+        } 
+        
+        // argument validation
+        if(gettype($url) !== "string") {
+            return PhttpResponse::getErrorResponse("Invalid URL provided");
+        }
+        if($requestBody !== null && gettype($requestBody) !== "string") {
+            return PhttpResponse::getErrorResponse("Invalid request body provided");
+        }
+        if(gettype($headers) !== "array") {
+            return PhttpResponse::getErrorResponse("Invalid headers provided");
+        }
+          
+        $client = curl_init();
+       
+        curl_setopt($client, CURLOPT_URL, $url); 
+
+        if($requestMethod !== Phttp::POST_REQUEST) {
+            curl_setopt($client, CURLOPT_CUSTOMREQUEST, $requestMethod);
+        } 
+
+        if($requestBody !== null) {
+           curl_setopt($client, CURLOPT_POSTFIELDS, $requestBody); 
+        }
+        
+        if(count($headers) > 0) {
+            Phttp::attachRequestHeaders($client, $headers);
+        }   
+     
+        
+        $resp = Phttp::getResponse($client);
+        curl_close($client);
+        
+        return $resp;
+          
+    }
 
     public static function get($url, $args, $headers) {
         // defaults
@@ -127,42 +172,10 @@ class Phttp {
         return $resp;
     } 
 
+
     public static function post($url, $requestBody = null, $headers = null) {
-
-        if($headers === null) {
-            $headers = array();
-        } 
-        
-        // argument validation
-        if(gettype($url) !== "string") {
-            return PhttpResponse::getErrorResponse("Invalid URL provided");
-        }
-        if($requestBody !== null && gettype($requestBody) !== "string") {
-            return PhttpResponse::getErrorResponse("Invalid request body provided");
-        }
-        if(gettype($headers) !== "array") {
-            return PhttpResponse::getErrorResponse("Invalid headers provided");
-        }
-          
-        $client = curl_init();
-       
-        curl_setopt($client, CURLOPT_URL, $url); 
-
-        if($requestBody !== null) {
-           curl_setopt($client, CURLOPT_POSTFIELDS, $requestBody); 
-        }
-        
-        if(count($headers) > 0) {
-            Phttp::attachRequestHeaders($client, $headers);
-        }   
-     
-        
-        $resp = Phttp::getResponse($client);
-        curl_close($client);
-        
-        return $resp;
-          
-    } 
+        return Phttp::makeRequest(Phttp::POST_REQUEST, $url, $requestBody, $headers);
+    }
 
     public static function postJson($url, $jsonArr = null, $headers = null) {
         if($jsonArr !== null && gettype($jsonArr) !== "array" ) {
@@ -181,8 +194,15 @@ class Phttp {
         $headers["Content-Type"] = "application/json";
 
         return Phttp::post($url, $jsonPayLoad, $headers);
-    }  
+    } 
 
 
+    public static function put($url, $requestBody = null, $headers = null) { 
+        return Phttp::makeRequest(Phttp::PUT_REQUEST, $url, $requestBody, $headers);
+    }
+
+    public static function delete($url, $requestBody = null, $headers = null) {
+        return Phttp::makeRequest(Phttp::DELETE_REQUEST, $url, $requestBody, $headers);
+    }
 }
 ?>
