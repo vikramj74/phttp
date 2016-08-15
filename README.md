@@ -78,7 +78,8 @@ $r = Phttp::post(
         "top_speed" => 300
     )),
     array(
-        "Auth-Token" => "abcdef123#!"
+        "Auth-Token" => "abcdef123#!",
+        "Content-Type" => "application/x-www-form-urlencoded"
     )
 );
 ```
@@ -89,7 +90,7 @@ A helper method to post as JSON an array of values. The 'Content-Type: applicati
 Phttp::postJson($url, $jsonArr, $headers);
 ```
 ### Parameters :
-- URL (string) : The URL at which a POST request should be issued.
+- URL (string) : The URL for which a POST request should be issued.
 - Request body (string) : The body of the request as a string. 
 - Request headers (array) : An array of headers to be added to the request.
 
@@ -107,6 +108,58 @@ $r = Phttp::postJson(
     )
 );
 ```
+
+## PUT
+```php
+Phttp::put($url, $requestBody, $headers);
+```
+### Parameters :
+- URL (string) : The URL for which a PUT request should be issued.
+- Request body (string) : The body of the request as a string. 
+- Request headers (array) : An array of headers to be added to the request.
+
+### Example : 
+```php 
+Ex : 
+$r = Phttp::put(
+    "api.project.com/apparel", 
+    http_build_query(array(
+        "id" => 221,
+        "type" => "Shirt",
+        "size" => "30 M"
+    )),
+    array(
+        "Auth-Token" => "abcdef123#!",
+        "Content-Type" => "application/x-www-form-urlencoded"
+    )
+);
+```
+
+## DELETE
+```php
+Phttp::delete($url, $requestBody, $headers);
+```
+### Parameters :
+- URL (string) : The URL at which a DELETE request should be issued.
+- Request body (string) : The body of the request as a string. 
+- Request headers (array) : An array of headers to be added to the request.
+
+### Example : 
+```php 
+Ex : 
+$r = Phttp::delete(
+    "api.project.com/orders", 
+    json_encode(array(
+        "id" => "2231",
+        "save_copy" => false
+    )),
+    array(
+        "Auth-Token" => "abcdef123#!",
+        "Content-Type" => "application/json"
+    )
+);
+```
+
   
 License
 ---------
