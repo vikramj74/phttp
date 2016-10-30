@@ -18,20 +18,23 @@ A simple curl wrapper, which provides a clean object oriented interface to manag
 ```php
 require_once('Phttp.php');
 
-$resp = Phttp::get("http://www.google.com");
-if($resp->getErrorMessage() === null) {
+try {
+  $resp = Phttp::get("http://google.com", null, null);
   echo "\nResponse : ";
   echo "\nStatus code : ".$resp->getStatusCode();
   echo "\nBody : ".$resp->getBody();
   $responseHeaders = $resp->getHeaders();
   if(count($responseHeaders) > 0) {
-    echo "\nResponse headers : "
-    foreach($headers as $hk => $hv) {
-      echo "\n$k : $v";
+    echo "\nResponse headers : ";
+    foreach($responseHeaders as $hk => $hv) {
+            echo "\n$hk : $hv";
     }
   }
-} else {
-  echo "\nError : ".$resp->getErrorMessage();
+  echo "\n";
+} catch(PhttpException $pe) {
+  echo "\nException occurred : ";
+  echo "\n Code : ".$pe->getCode();
+  echo "\n Message : ".$pe->getMessage()."\n";
 }
 ```
 Available methods
