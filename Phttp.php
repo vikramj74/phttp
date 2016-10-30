@@ -1,22 +1,24 @@
 <?php
+class PhttpException extends Exception {
+    public function __construct($message, $code = 0, Exception $previous = null) {
+        parent::__construct($message, $code, $previous);
+    }
+
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+    }
+}
+
 class PhttpResponse {
     private $body = null;
     private $headers = null ;
     private $statusCode = null;
-    private $errorMessage= null;
     
-    public static function getErrorResponse($errMsg) {
-        return new PhttpResponse(null, null, null, $errMsg);
-    }
-
     
-    public function __construct($statusCode, $body, $headers, $errMsg = null) {
+    public function __construct($statusCode, $body, $headers) {
         $this->statusCode =  $statusCode; 
         $this->body = $body;
         $this->headers = $headers;
-        if($errMsg !== null) {
-            $this->errorMessage = $errMsg;
-        }
     }
     
     public function getHeaders() {
@@ -32,10 +34,24 @@ class PhttpResponse {
         return $this->statusCode;
     }    
 
-    public function getErrorMessage() {
-        return $this->errorMessage;
+    public function __toString() {
+        $str  = "\nPhttpResponse : \n\n Status code : ".$this->statusCode;
+        $str .= "\n Body : ".$this->body;
+        $str .= "\n Headers : ";
+        foreach($this->headers as $k => $v) {
+            $str .= "\n  $k => $v";
+        }
+        return $str."\n";
+    }
+
+
+    public function toJson() {
+        return json_encode(array(
+            "statusCode" => $this->statusCode,
+            "body" => $this->body,
+            "headers" => $this->headers
+        ));
     }    
-    
 
 }
 
@@ -61,10 +77,13 @@ class Phttp {
                 list($name, $value) =  array_pad(explode(':', $h, 2), 2, null);
                 $name = trim($name);
                 $value = trim($value);
+                if(empty($name) && empty($value)) {
+                    continue;
+                }
                 $parsedHeaders[$name] = $value;
             }
         }
-        
+         
         return $parsedHeaders;
     }
 
@@ -99,13 +118,13 @@ class Phttp {
         
         // argument validation
         if(gettype($url) !== "string") {
-            return PhttpResponse::getErrorResponse("Invalid URL provided");
+            throw new PhttpException("Invalid URL provided", 1);
         }
         if($requestBody !== null && gettype($requestBody) !== "string") {
-            return PhttpResponse::getErrorResponse("Invalid request body provided");
+            throw new PhttpException("Invalid request body provided", 2);
         }
         if(gettype($headers) !== "array") {
-            return PhttpResponse::getErrorResponse("Invalid headers provided");
+            throw new PhttpException("Invalid headers provided", 3);
         }
           
         $client = curl_init();
@@ -143,13 +162,13 @@ class Phttp {
 
         // argument validation
         if(gettype($url) !== "string") {
-            return PhttpResponse::getErrorResponse("Invalid URL provided");
+            throw new PhttpException("Invalid URL provided", 1);
         }
         if(gettype($args) !== "array") {
-            return PhttpResponse::getErrorResponse("Invalid arguments provided");
+            throw new PhttpException("Invalid query parameters provided", 4);
         }
         if(gettype($headers) !== "array") {
-            return PhttpResponse::getErrorResponse("Invalid headers provided");
+            throw new PhttpException("Invalid headers provided", 3);
         }
        
         if(count($args) > 0) {
@@ -179,7 +198,7 @@ class Phttp {
 
     public static function postJson($url, $jsonArr = null, $headers = null) {
         if($jsonArr !== null && gettype($jsonArr) !== "array" ) {
-            return PhttpResponse::getErrorResponse("Invalid JSON parameter provided");
+            throw new PhttpException('Invalid JSON body provided', 5);
         }
 
         $jsonPayLoad = null;
